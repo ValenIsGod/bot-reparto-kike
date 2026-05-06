@@ -1,0 +1,23 @@
+name: Ejecutar Bot de Pedido
+on:
+  repository_dispatch:
+    types: [nuevo_pedido]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v2
+      - name: Instalar Python y Navegador
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Instalar dependencias
+        run: |
+          pip install selenium webdriver-manager
+      - name: Correr Bot
+        env:
+          # Aquí recibimos los datos que manda Make
+          PEDIDO_DATA: ${{ github.event.client_payload.datos }}
+        run: python script_bot.py
