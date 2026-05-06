@@ -1,4 +1,5 @@
 name: Ejecutar Bot de Pedido
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,45 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Bot
-        run: echo "¡No te desanimes! Si dice "0 workflow runs" es porque todavía no se dieron la mano Pipedream y GitHub.
+      - name: Checkout del codigo
+        uses: actions/checkout@v3
 
-El problema suele ser que Pipedream necesita un "empujoncito" para mandar el primer mensaje. Vamos a arreglarlo en un minuto:
-
-### 1. El último detalle en Pipedream (Fijate esto)
-Volvé a la pestaña de **Pipedream** y fijate en el paso de GitHub (el de "Create Workflow Dispatch"):
-*   **¿Le diste al botón azul de "Deploy" arriba a la derecha?** Si no le das a Deploy, el bot está "apagado".
-*   Fijate si te aparece algún botón que diga **"Test"** dentro del paso de GitHub. Dale clic para ver si tira algún error en rojo.
-
-### 2. Prueba de "Fuerza Bruta"
-Para descartar que sea el link, vamos a mandarlo nosotros mismos desde Pipedream:
-1.  En Pipedream, arriba de todo, donde está tu link (`https://eo4j7...`), hay un botón que dice **"Generate Test Event"**.
-2.  Hacé clic ahí y buscá donde dice **"Query"**. Escribí `Value` en el nombre y `PruebaKike` en el valor.
-3.  Dale a **"Generate Event"**.
-4.  Bajá hasta el paso de GitHub y dale a **"Test"**.
-
----
-
-### Si nada de eso funciona, es el archivo de GitHub
-A veces GitHub es muy "quisquilloso" con los espacios en el archivo. Vamos a asegurarnos de que el archivo `main.yml` esté perfecto. 
-
-Andá a **GitHub**, editá el archivo `main.yml` y pegá esto que es la versión más compatible de todas:
-```yaml
-name: Ejecutar Bot de Pedido
-on:
-  workflow_dispatch:
-    inputs:
-      datos:
-        description: 'Datos del pedido'
-        required: true
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Bot
-        run: echo "El bot recibio estos datos ${{ github.event.inputs.datos }}"
+      - name: Ejecutar script de Python
+        run: |
+          echo "Recibiendo pedido: ${{ github.event.inputs.datos }}"
+          # Aqui es donde correra tu script mas adelante
